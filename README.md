@@ -28,6 +28,14 @@ Our standard uses 48 carefully selected characters:
 ## 🌐 Live Demo
 Try the **Base-48 Standard Converter** online:  
 [**https://base48-standard.github.io/Base-48-Standard/**](https://base48-standard.github.io/Base-48-Standard/)
+
+## 📦 Installation
+
+You can install the official Base-48 library via **NPM**:
+
+```bash
+npm install base48-standard
+```
 ## 🛠️ Quick Start (JavaScript)
 
 ```javascript
