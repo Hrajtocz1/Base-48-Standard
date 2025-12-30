@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Base-48 Standard Converter</title>
     <style>
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0f0f0f; color: #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .container { background: #1a1a1a; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); text-align: center; max-width: 450px; width: 90%; border: 1px solid #333; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0f0f0f; color: #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background: #1a1a1a; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); text-align: center; max-width: 450px; width: 100%; border: 1px solid #333; }
         h1 { color: #00ffcc; margin-bottom: 0.5rem; letter-spacing: -1px; }
         p { color: #aaa; font-size: 0.95rem; margin-bottom: 2rem; }
         
@@ -16,18 +16,23 @@
         input { width: 100%; padding: 14px; border: 1px solid #333; border-radius: 8px; background: #252525; color: #fff; font-size: 1.1rem; box-sizing: border-box; outline: none; transition: border-color 0.3s; }
         input:focus { border-color: #00ffcc; }
         
-        .result-box { background: #252525; padding: 20px; border-radius: 8px; margin-top: 10px; position: relative; border: 1px dashed #444; }
+        .result-box { background: #252525; padding: 20px; border-radius: 8px; margin-top: 10px; position: relative; border: 1px dashed #444; margin-bottom: 20px; }
         .result-label { font-size: 0.7rem; text-transform: uppercase; color: #888; letter-spacing: 1px; margin-bottom: 10px; }
-        #output { font-size: 2.2rem; font-weight: bold; color: #00ffcc; word-break: break-all; margin-bottom: 10px; font-family: 'Courier New', monospace; }
+        
+        /* Zde je oprava pro zalamování textu */
+        #output, #hexOutput { word-break: break-all; overflow-wrap: break-word; font-family: 'Courier New', monospace; font-weight: bold; }
+        
+        #output { font-size: 2.2rem; color: #00ffcc; margin-bottom: 15px; display: block; }
         
         button { width: 100%; padding: 12px; background: #00ffcc; border: none; border-radius: 8px; cursor: pointer; color: #0b0b0b; font-weight: bold; font-size: 1rem; transition: transform 0.1s, background 0.3s; }
         button:hover { background: #00dbaf; }
         button:active { transform: scale(0.98); }
         
-        .comparison { margin-top: 1.5rem; font-size: 0.85rem; color: #666; padding-top: 1.5rem; border-top: 1px solid #333; }
-        .comparison span { color: #ff3366; font-family: monospace; }
+        .comparison { margin-top: 1.5rem; font-size: 0.85rem; color: #666; padding-top: 1.5rem; border-top: 1px solid #333; text-align: left; }
+        .comparison label { color: #444; margin-bottom: 5px; display: block; }
+        #hexOutput { color: #ff3366; font-size: 1.1rem; display: block; }
         
-        .footer { margin-top: 2rem; font-size: 0.75rem; color: #444; }
+        .footer { margin-top: 2rem; font-size: 0.75rem; color: #444; text-align: center; }
     </style>
 </head>
 <body>
@@ -48,7 +53,8 @@
     </div>
 
     <div class="comparison">
-        Standard Hex equivalent: <span id="hexOutput">0x0</span>
+        <label>Standard Hex equivalent:</label>
+        <span id="hexOutput">0x0</span>
     </div>
 </div>
 
@@ -70,20 +76,26 @@
             return;
         }
 
-        let num = Math.floor(val);
-        
-        // Base-48 Conversion
-        let result = "";
-        let tempNum = num;
-        if (tempNum === 0) result = ALPHABET[0];
-        while (tempNum > 0) {
-            result = ALPHABET[tempNum % 48] + result;
-            tempNum = Math.floor(tempNum / 48);
-        }
-        output.innerText = result || "0";
+        // JS umí pracovat s velkými čísly pomocí BigInt, aby se předešlo chybám u obřích adres
+        try {
+            let num = BigInt(val.split('.')[0]); 
+            
+            // Base-48 Conversion
+            let result = "";
+            let tempNum = num;
+            if (tempNum === 0n) result = ALPHABET[0];
+            while (tempNum > 0n) {
+                result = ALPHABET[Number(tempNum % 48n)] + result;
+                tempNum = tempNum / 48n;
+            }
+            output.innerText = result || "0";
 
-        // Hex Comparison
-        hexOutput.innerText = "0x" + parseInt(val).toString(16).toUpperCase();
+            // Hex Comparison
+            hexOutput.innerText = "0x" + num.toString(16).toUpperCase();
+        } catch (e) {
+            output.innerText = "Error";
+            hexOutput.innerText = "Value too large";
+        }
     }
 
     function copyToClipboard() {
