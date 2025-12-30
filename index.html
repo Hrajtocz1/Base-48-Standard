@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base-48 Standard Converter</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { background: #1e1e1e; padding: 2rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); text-align: center; max-width: 400px; width: 90%; }
+        h1 { color: #00ffcc; margin-bottom: 0.5rem; }
+        p { color: #888; font-size: 0.9rem; }
+        input { width: 100%; padding: 12px; margin: 20px 0; border: none; border-radius: 6px; background: #333; color: #fff; font-size: 1.1rem; box-sizing: border-box; }
+        .result-label { font-size: 0.8rem; text-transform: uppercase; color: #888; letter-spacing: 1px; }
+        #output { font-size: 2.5rem; font-weight: bold; color: #00ffcc; margin-top: 10px; word-break: break-all; }
+        .footer { margin-top: 2rem; font-size: 0.8rem; color: #444; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Base-48</h1>
+    <p>The new standard for memory addressing.</p>
+    
+    <input type="number" id="inputNum" placeholder="Enter a number (e.g. 1000000)" oninput="convert()">
+    
+    <div class="result-label">Base-48 Address</div>
+    <div id="output">0</div>
+</div>
+
+<div class="footer">
+    Released under the Open Base-48 License
+</div>
+
+<script>
+    const ALPHABET = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqr";
+
+    function convert() {
+        let num = document.getElementById('inputNum').value;
+        let output = document.getElementById('output');
+        
+        if (!num || num < 0) {
+            output.innerText = "0";
+            return;
+        }
+
+        num = Math.floor(num);
+        let result = "";
+        while (num > 0) {
+            result = ALPHABET[num % 48] + result;
+            num = Math.floor(num / 48);
+        }
+        output.innerText = result || "0";
+    }
+</script>
+
+</body>
+</html>
