@@ -32,3 +32,17 @@ import { encode, decode } from 'base48';
 
 const myAddr = encode(415232); 
 console.log(`B48 Address: ${myAddr}`); // Output: 3mP8
+```
+
+❓ Frequently Asked Questions (FAQ)
+1. Why 48 characters? Why not 32 or 64?
+Base-48 is the "sweet spot." Base-32 is still quite long for large addresses, and Base-64 includes characters that are often used as delimiters (like + and /) or look too similar. Base-48 allows for significant compression while keeping every character distinct.
+
+2. Which characters were removed and why?
+We removed characters that cause transcription errors: 0 (zero), O (capital O), I (capital i), and l (lowercase L). This ensures that no matter what font you use, you can't misread a Base-48 address.
+
+3. Is Base-48 case-sensitive?
+Yes. To achieve high density with only 48 characters, the system distinguishes between uppercase and lowercase letters. For example, A is index 10, while a is index 37.
+
+4. Is it faster than Hex?
+For a computer, Hex is native. However, for a human, Base-48 is faster to read, type, and communicate because the strings are significantly shorter and lack "visual noise."
